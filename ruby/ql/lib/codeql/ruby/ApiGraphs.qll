@@ -572,11 +572,13 @@ module API {
       // `pred` is a use of class A
       // `succ` is a use of class B
       // there exists a class declaration B < A
-      exists(ClassDeclaration c, DataFlow::Node a, DataFlow::Node b |
+      exists(DataFlow::Node a, DataFlow::Node b |
         use(pred, a) and
         use(succ, b) and
-        resolveConstant(b.asExpr().getExpr()) = resolveConstantWriteAccess(c) and
-        c.getSuperclassExpr() = a.asExpr().getExpr() and
+        resolveConstant(b.asExpr().getExpr()) =
+          resolveConstantWriteAccess(any(ClassDeclaration c |
+              c.getSuperclassExpr() = a.asExpr().getExpr()
+            )) and
         lbl = Label::subclass()
       )
       or
